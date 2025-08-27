@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Rokan Hulu Virtual Tour 360</title>
+  <meta name="description" content="Selamat datang di Rokan Hulu, Negeri Seribu Suluk. Mari jelajahi keindahan alam, sejarah, dan religi melalui tur virtual 360°. Nikmati megahnya Masjid Agung Madani, hangatnya Air Panas Hapanasan, hingga khidmatnya Makam Raja Rambah. Rasakan pengalaman seolah Anda berada langsung di sana, dan jadikan Rokan Hulu destinasi wisata Anda berikutnya!" />
+  <meta name="theme-color" content="#16a34a" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Rokan Hulu Virtual Tour 360" />
+  <meta property="og:description" content="Selamat datang di Rokan Hulu, Negeri Seribu Suluk. Jelajahi melalui tur virtual 360°." />
+  <meta property="og:image" content="assets/hero-mamic.jpg" />
+  <meta property="og:type" content="website" />
+
+  <!-- Preconnect & Preload Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Lato:wght@300;400;700;900&family=Poppins:wght@400;600;700;800&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Lato:wght@300;400;700;900&family=Poppins:wght@400;600;700;800&display=swap" media="print" onload="this.media='all'" />
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Lato:wght@300;400;700;900&family=Poppins:wght@400;600;700;800&display=swap" />
+  </noscript>
+
+  <!-- AOS (Animate On Scroll) via CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+  <!-- Pannellum CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css" />
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Styles (terpisah) -->
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- Site Icon / Favicon -->
+  <link rel="icon" type="image/png" href="assets/icon.png" />
+  <link rel="apple-touch-icon" href="assets/icon.png" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Lewati ke konten utama</a>
+
+  <header class="site-header" role="banner">
+    <nav class="navbar" aria-label="Navigasi utama">
+      <div class="nav-inner">
+        <div class="brand">
+          <a href="#hero" class="brand-link" aria-label="Beranda Rokan Hulu Virtual Tour 360">Rokan Hulu Virtual Tour</a>
+        </div>
+        <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Buka menu">☰</button>
+        <ul id="primary-nav" class="nav-links">
+          <li><a href="#hero" class="nav-link" data-nav="hero">Beranda</a></li>
+          <li><a href="#mamic" class="nav-link" data-nav="mamic">MAMIC</a></li>
+          <li><a href="#hapanasan" class="nav-link" data-nav="hapanasan">Hapanasan</a></li>
+          <li><a href="#rambah" class="nav-link" data-nav="rambah">Makam Raja Rambah</a></li>
+          <li><a href="#about" class="nav-link" data-nav="about">Tentang</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <!-- Hero -->
+    <section id="hero" class="hero" role="region" aria-label="Pengantar" data-aos="fade-up">
+      <div class="hero-bg" role="img" aria-label="Masjid Agung Madani Rokan Hulu"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1 class="hero-title">Rokan Hulu Virtual Tour 360</h1>
+        <p class="hero-tagline">
+          "Selamat datang di Rokan Hulu, Negeri Seribu Suluk. Mari jelajahi keindahan alam, sejarah, dan religi melalui tur virtual 360°. Nikmati megahnya Masjid Agung Madani, hangatnya Air Panas Hapanasan, hingga khidmatnya Makam Raja Rambah. Rasakan pengalaman seolah Anda berada langsung di sana, dan jadikan Rokan Hulu destinasi wisata Anda berikutnya!"
+        </p>
+        <div class="hero-cta">
+          <a href="#mamic" class="btn btn-primary">Mulai Tur Virtual</a>
+          <a href="https://rokanhulukab.go.id" target="_blank" rel="noopener" class="btn btn-primary">Kunjungi Rokan Hulu</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sections akan dirender dari js/data.js oleh js/script.js -->
+    <div id="sections-root"></div>
+
+    <!-- Tentang -->
+    <section id="about" class="section about" role="region" aria-label="Tentang situs" data-aos="fade-up">
+      <div class="section-inner">
+        <header class="section-header">
+          <small class="section-kicker">Tentang</small>
+          <h2 class="section-title">Tentang Rokan Hulu Virtual Tour 360</h2>
+          <p class="section-desc">
+            Situs ini menampilkan tur virtual 360° dari beberapa ikon wisata Rokan Hulu. Semua konten teks bersumber dari publikasi dan portal berita setempat. Fitur 360 menggunakan pendekatan lazy-load agar performa tetap optimal.
+          </p>
+        </header>
+        <div class="about-cards">
+          <div class="about-card">
+            <h3>Aksesibilitas</h3>
+            <p>Struktur semantic HTML, fokus keyboard jelas, dan kontras warna memadai. Menghormati preferensi motion pengguna.</p>
+          </div>
+          <div class="about-card">
+            <h3>Performa</h3>
+            <p>Gambar hero dengan overlay gradasi, font preload, dan inisialisasi 360 ditunda sampai terlihat di viewport.</p>
+          </div>
+          <div class="about-card">
+            <h3>Teknologi</h3>
+            <p>HTML, CSS, dan JavaScript murni. Animasi scroll oleh AOS (fallback sederhana jika tidak tersedia).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <p>© <span id="year"></span> Rokan Hulu Virtual Tour 360. Dibangun untuk keperluan demonstrasi.</p>
+      <p>Sumber teks ringkas: publikasi Pemkab Rokan Hulu, Bisnis.com, RiauMagz, Media Center Riau, Riau Pos, Neliti, Rokapress, dll.</p>
+      <address>
+        Kontak (placeholder): Dinas Pariwisata & Kebudayaan Rokan Hulu — Jl. Pembangunan, Pasir Pengaraian
+      </address>
+    </div>
+  </footer>
+
+  <!-- AOS JS via CDN -->
+  <script defer src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.min.js"></script>
+
+  <!-- Pannellum 360 Viewer -->
+  <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+
+  <!-- Leaflet Maps -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <!-- Leaflet Fullscreen Plugin -->
+  <script src="https://unpkg.com/leaflet.fullscreen@2.4.0/Control.FullScreen.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen@2.4.0/Control.FullScreen.css" />
+
+  <!-- Data dan skrip aplikasi -->
+  <script defer src="js/data.js"></script>
+  <script defer src="js/three-sixty-init.js"></script>
+  <script defer src="js/script.js"></script>
+</body>
+</html>
+
+

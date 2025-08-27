@@ -1,0 +1,592 @@
+			<!DOCTYPE html>
+			<html lang="en">
+				<head>
+					<!--projecttitle--><title>projek</title><!--projecttitle-end-->
+					<!--projectdescription--><meta name="description" content="New 3Sixty Virtual Tour Project"><!--projectdescription-end-->
+					<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+					<meta charset="utf-8">
+					<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width, shrink-to-fit=no">
+					
+					<link rel="stylesheet" type="text/css" href="css/font-awesome.css">
+					<link rel="stylesheet" type="text/css" href="style.css">
+					
+					<!-- Insert this line above script imports  -->
+					<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+					
+					<script src="js/jquery.js"></script>
+					<script src="js/imagedata.js"></script>
+					
+					<!-- Insert this line after script imports -->
+					<script>if (window.module) module = window.module;</script>
+					
+					<style>
+					
+						
+									
+						/* SCROLLBAR STYLING */
+						/* width */
+						::-webkit-scrollbar {
+							width: 0.25em;
+							height: 0.25em;
+						}
+						/* Track */
+						::-webkit-scrollbar-track {
+							background: #2c3643; 
+						}
+						/* Handle */
+						::-webkit-scrollbar-thumb {
+							background: #0d9e59; 
+							transition: background .5s;
+						}
+						/* Handle on hover */
+						::-webkit-scrollbar-thumb:hover {
+							background: #00e075; 
+						}
+
+
+						body {
+							margin: 0;
+							overflow: hidden;
+						}
+						#container {
+							width: 100vw;
+							height: 100vh;
+							display: block;
+						}
+						#overlay {
+							position: absolute;
+							top: 0; left: 0;
+							width: 100vw;
+							height: 100vh;
+							background-color: rgba(0, 0, 0, 0.8);
+							color: white;
+							font-size: 2rem;
+							display: flex;
+							justify-content: center;
+							align-items: center;
+							z-index: 10;
+							opacity: 0;
+							pointer-events: none;
+							transition: opacity 0.5s ease;
+						}
+						
+						#tmp{
+							position: fixed;
+							top: 0;
+							left: 0; 
+							right: 0;
+							bottom: 0;
+							padding: 3em;
+							background-color: rgba(0,0,0,.5);
+							backdrop-filter: blur(5px);
+							display: none;
+							z-index: 21;
+						}
+					</style>
+				</head>
+				<body id="body">
+					<div id="container"></div>
+					<div id="overlay">Loading...</div>
+					
+					
+					
+					<!--customhtml--><!--customhtml-end-->
+					
+					<div id="tmp">
+						<div style="width: 100%; height: 100%; overflow: hidden; overflow-y: auto; box-sizing: border-box; position: relative;" id="tmpcontent"></div>
+						<div class="mediaclosebutton" onclick="hideTemp()"><i class="fa fa-times-circle"></i></div>
+					</div>
+
+
+					<div id="loading" class="fullwrapper" style="display: table; width: 100%; height: 100%;">
+						<div style="display: table-cell; vertical-align: middle; text-align: center; color: white; font-size: 30px; padding: 50px;">
+							<!--loadingtext-->Loading...<!--loadingtext-end-->
+							<div id="loadingperc" style="font-size:12px;"></div>
+						</div>
+					</div>
+					
+					<!-- Three.js Core -->
+					<script src="js/three.min.js"></script>
+					<!-- OrbitControls -->
+					<script src="js/OrbitControls.js"></script>
+					
+					<script>
+						
+						let scene, camera, renderer, controls;
+						let spriteHotspots = [];
+						
+						let panoramaMesh;
+
+						let targetFov = 75;
+						let initialFov = 75;
+						let initialPinchDistance = null;
+
+						const overlay = document.getElementById('overlay');
+						const raycaster = new THREE.Raycaster();
+						const mouse = new THREE.Vector2();
+
+						init();
+						animate();
+						
+						/*initfunction*/
+
+					let currentPanorama = '1.jpg';
+					function init() {
+						const container = document.getElementById('container');
+
+						scene = new THREE.Scene();
+
+						camera = new THREE.PerspectiveCamera(targetFov, container.clientWidth / container.clientHeight, 0.1, 1000);
+						camera.position.set(0, 0, 0.1);
+
+						renderer = new THREE.WebGLRenderer({ antialias: true });
+						renderer.setSize(container.clientWidth, container.clientHeight);
+						container.appendChild(renderer.domElement);
+
+						controls = new THREE.OrbitControls(camera, renderer.domElement);
+						controls.enableZoom = true;
+						controls.minDistance = 0.1;
+						controls.maxDistance = 5;
+						controls.enablePan = false;
+						controls.rotateSpeed = -0.3;
+						controls.enableDamping = true;
+						controls.dampingFactor = 0.1;
+
+						const geometry = new THREE.SphereGeometry(500, 60, 40);
+						geometry.scale(-1, 1, 1);
+
+						const texture = new THREE.TextureLoader().load('panoramas/1.jpg');
+						const material = new THREE.MeshBasicMaterial({ map: texture });
+
+						panoramaMesh = new THREE.Mesh(geometry, material);
+						scene.add(panoramaMesh);
+
+						loadHotspotsFor('1.jpg');
+
+						window.addEventListener('resize', onWindowResize);
+						renderer.domElement.addEventListener('wheel', onMouseWheel, { passive: false });
+						renderer.domElement.addEventListener('touchstart', handleTouchStart, { passive: false });
+						renderer.domElement.addEventListener('touchmove', handleTouchMove, { passive: false });
+						renderer.domElement.addEventListener('pointermove', onPointerMove, false);
+					}
+					
+
+			/*initfunction-end*/
+
+						function onMouseWheel(e) {
+							e.preventDefault();
+							targetFov += e.deltaY * 0.05;
+							targetFov = THREE.MathUtils.clamp(targetFov, 30, 100);
+						}
+
+						function handleTouchStart(e) {
+							if (e.touches.length === 2) {
+								const dx = e.touches[0].pageX - e.touches[1].pageX;
+								const dy = e.touches[0].pageY - e.touches[1].pageY;
+								initialPinchDistance = Math.sqrt(dx * dx + dy * dy);
+								initialFov = targetFov;
+							}
+						}
+
+						function handleTouchMove(e) {
+							if (e.touches.length === 2 && initialPinchDistance !== null) {
+								e.preventDefault();
+								const dx = e.touches[0].pageX - e.touches[1].pageX;
+								const dy = e.touches[0].pageY - e.touches[1].pageY;
+								const newDistance = Math.sqrt(dx * dx + dy * dy);
+								const zoomFactor = initialPinchDistance / newDistance;
+								targetFov = THREE.MathUtils.clamp(initialFov * zoomFactor, 30, 100);
+							}
+						}
+
+						function loadHotspotsFor(panorama) {
+							clearHotspots();
+							/*panoramas*/
+
+						if (panorama === '2.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(360.33030110272057, -169.58432021429024, -27.237329075675028), () => {
+					switchPanorama('1.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(-367.10552495393824, -155.78309679553064, -19.833600711620512), () => {
+					switchPanorama('3.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(-81.34080490435366, -67.53456769393037, -385.5202596032426), () => {
+					switchPanorama('22.jpg');
+				});
+			}
+
+						if (panorama === '3.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(370.9056524681391, -146.8919210494475, -14.398078964286285), () => {
+					switchPanorama('2.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(-210.44404051088225, -84.73488957071167, 328.28251701087817), () => {
+					switchPanorama('4.jpg');
+				});
+			}
+
+						if (panorama === '5.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(-355.5272108889329, -109.9841656327674, -144.07089763457552), () => {
+					switchPanorama('4.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(384.72996297037423, -83.9479959046621, 64.55650063253498), () => {
+					switchPanorama('6.jpg');
+				});
+			}
+
+						if (panorama === '6.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(-368.89378850789814, -139.72122495045937, -60.11382287820372), () => {
+					switchPanorama('5.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(385.6930043406993, -98.11106770821142, -34.54639227213579), () => {
+					switchPanorama('7.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(23.203969606185783, -107.84991307427177, 383.44142462601945), () => {
+					switchPanorama('8.5.jpg');
+				});
+			}
+
+						if (panorama === '4.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(341.6964262534871, -96.84877655358737, -182.459825227495), () => {
+					switchPanorama('3.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(-385.1982967879543, -106.01182729623041, 1.6709705257016714), () => {
+					switchPanorama('5.jpg');
+				});
+			}
+
+						if (panorama === '1.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(-399.07596136137585, 15.585653433250123, 3.6424903224092233), () => {
+					switchPanorama('2.jpg');
+				});
+			}
+
+						if (panorama === '7.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(-372.21593115862, -140.838048263985, 32.387191875595555), () => {
+					switchPanorama('6.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(64.03307787554792, -93.5450028627405, 382.93255694627123), () => {
+					switchPanorama('8.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(384.0350419169643, -104.08650983502353, -33.25120792562388), () => {
+					switchPanorama('9.jpg');
+				});
+			}
+
+						if (panorama === '8.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(-18.218211496674797, -103.67029875488775, -384.8866715334211), () => {
+					switchPanorama('7.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(-361.8205492095605, -166.7580065476639, 23.26812802572198), () => {
+					switchPanorama('8.5.jpg');
+				});
+				addHotspot('images/chevronleft.png', new THREE.Vector3(92.53892848316659, -54.19987690698321, 384.51093445762655), () => {
+					switchPanorama('11.jpg');
+				});
+			}
+
+						if (panorama === '9.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(-356.5643090244459, -141.8470304980778, -110.62810967284946), () => {
+					switchPanorama('7.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(26.380257289396113, -94.12799343219356, 387.2233763279727), () => {
+					switchPanorama('10.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(65.48245839822755, -111.66475206300237, -377.4709445136876), () => {
+					switchPanorama('19.jpg');
+				});
+			}
+
+						if (panorama === '10.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(17.41521046506805, -98.83131938926135, -386.3184836300809), () => {
+					switchPanorama('9.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(-12.216780390274735, -135.73514907092522, 375.1173917491679), () => {
+					switchPanorama('11.jpg');
+				});
+			}
+
+						if (panorama === '11.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(345.75541337707307, -86.53925668608845, -179.5607449082335), () => {
+					switchPanorama('12.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(-182.36244813441462, -97.45951684180953, -341.5475651259514), () => {
+					switchPanorama('10.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(-385.23939307579195, -102.64052914605395, 17.133381094799578), () => {
+					switchPanorama('8.jpg');
+				});
+			}
+
+						if (panorama === '8.5.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(-370.0732625714559, -104.37912919683595, 106.88771033377087), () => {
+					switchPanorama('8.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(20.870311349372365, -120.74122877407349, 379.98074526874467), () => {
+					switchPanorama('6.jpg');
+				});
+			}
+
+						if (panorama === '12.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(-42.836453680720254, -86.11001403165203, -387.8506468385367), () => {
+					switchPanorama('11.jpg');
+				});
+				addHotspot('images/chevronleft.png', new THREE.Vector3(119.50170811171296, -87.13352175894775, 371.3137902960019), () => {
+					switchPanorama('13.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(335.572217153479, -210.48157316896027, -51.271453969695116), () => {
+					switchPanorama('18.jpg');
+				});
+			}
+
+						if (panorama === '13.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(262.5327548863014, -98.33002649236475, -284.6579206666143), () => {
+					switchPanorama('12.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(-358.53367804905713, -160.95776588901023, 71.42797031418753), () => {
+					switchPanorama('14.jpg');
+				});
+			}
+
+						if (panorama === '14.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(-29.01439134545589, -126.76209144704404, -377.60313633125975), () => {
+					switchPanorama('13.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(-123.53863064344372, -151.18372938620547, 348.50276352447787), () => {
+					switchPanorama('15.jpg');
+				});
+			}
+
+						if (panorama === '15.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(-165.7093438909539, -148.68028585326527, -331.38817755733356), () => {
+					switchPanorama('14.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(-18.12990832321066, -117.49255861315383, 381.0164010638871), () => {
+					switchPanorama('16.jpg');
+				});
+			}
+
+						if (panorama === '16.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(121.72649972872183, -148.60909606077416, -350.20711111785886), () => {
+					switchPanorama('15.jpg');
+				});
+				addHotspot('images/chevronleft.png', new THREE.Vector3(358.1996194327346, -67.42703228415549, -163.71224355007828), () => {
+					switchPanorama('17.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(392.6921158750114, -65.61081069677799, -31.547652464618622), () => {
+					switchPanorama('20.jpg');
+				});
+			}
+
+						if (panorama === '17.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(81.03903887076439, -123.01518597297137, 371.7293977706412), () => {
+					switchPanorama('16.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(93.85179517332193, -106.7887532349367, -372.85182362866755), () => {
+					switchPanorama('18.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(343.7860929289375, -66.3505041214229, -192.45811036930237), () => {
+					switchPanorama('19.jpg');
+				});
+			}
+
+						if (panorama === '18.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(-77.3812562131301, -89.32358350114785, 381.73575353762953), () => {
+					switchPanorama('17.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(-92.76123114027446, -65.96080708308531, -382.75673035950376), () => {
+					switchPanorama('12.jpg');
+				});
+			}
+
+						if (panorama === '19.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(-353.47617122146045, -184.66348736459017, 20.037775237255794), () => {
+					switchPanorama('18.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(-39.99821606309774, -125.52631636823239, -377.5612377168619), () => {
+					switchPanorama('9.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(-6.364718042617328, -124.40269553324771, 379.71557099475336), () => {
+					switchPanorama('20.jpg');
+				});
+			}
+
+						if (panorama === '20.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(374.8037770227728, -105.46481403289914, -88.14919981774517), () => {
+					switchPanorama('16.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(40.50169951613283, -129.27171816063597, 376.04448810689536), () => {
+					switchPanorama('19.jpg');
+				});
+			}
+
+						if (panorama === '21.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(34.691811626443766, -95.10976849694349, 386.55723549420065), () => {
+					switchPanorama('23.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(1.2761651233713, -140.03292156452113, -374.19859129531653), () => {
+					switchPanorama('22.jpg');
+				});
+			}
+
+						if (panorama === '22.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(-12.004886753660548, -88.04386852758861, 389.2245202570265), () => {
+					switchPanorama('2.jpg');
+				});
+				addHotspot('images/chevronforward.png', new THREE.Vector3(-29.029659242637997, -102.07793194745415, -384.7994613743394), () => {
+					switchPanorama('21.jpg');
+				});
+			}
+
+						if (panorama === '23.jpg') {
+							addHotspot('images/chevronforward.png', new THREE.Vector3(-36.98861049998736, -87.67364592049833, 388.0521619574692), () => {
+					switchPanorama('21.jpg');
+				});
+			}
+
+
+			/*panoramas-end*/
+							
+						}
+
+						function switchPanorama(panoramaName) {
+							overlay.style.pointerEvents = 'auto';
+							overlay.style.opacity = '1';
+							overlay.textContent = 'Loading...';
+
+							const newTexture = new THREE.TextureLoader().load(`panoramas/${panoramaName}`, (tex) => {
+								panoramaMesh.material.map = tex;
+								panoramaMesh.material.needsUpdate = true;
+								currentPanorama = panoramaName;
+								loadHotspotsFor(currentPanorama);
+								overlay.style.opacity = '0';
+								overlay.style.pointerEvents = 'none';
+							}, (xhr) => {
+								const progress = (xhr.loaded / xhr.total) * 100;
+								overlay.textContent = `Loading... ${progress.toFixed(0)}%`;
+							});
+						}
+
+						function addHotspot(imageUrl, position, onClickCallback) {
+							const textureLoader = new THREE.TextureLoader();
+							textureLoader.load(imageUrl, (texture) => {
+								const material = new THREE.SpriteMaterial({ map: texture });
+								const sprite = new THREE.Sprite(material);
+								sprite.position.copy(position);
+								sprite.scale.set(40, 40, 1);
+								sprite.userData = {
+									onClick: onClickCallback,
+									targetScale: 40
+								};
+								spriteHotspots.push(sprite);
+								scene.add(sprite);
+							});
+						}
+
+						function clearHotspots() {
+							spriteHotspots.forEach(sprite => scene.remove(sprite));
+							spriteHotspots = [];
+						}
+
+						function onPointerMove(event) {
+							mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+							mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+							raycaster.setFromCamera(mouse, camera);
+							const intersects = raycaster.intersectObjects(spriteHotspots);
+
+							spriteHotspots.forEach(sprite => {
+								sprite.userData.targetScale = 40;
+							});
+
+							if (intersects.length > 0) {
+								intersects[0].object.userData.targetScale = 50;
+							}
+						}
+
+						function onWindowResize() {
+							camera.aspect = window.innerWidth / window.innerHeight;
+							camera.updateProjectionMatrix();
+							renderer.setSize(window.innerWidth, window.innerHeight);
+						}
+
+						function animate() {
+							requestAnimationFrame(animate);
+
+							// Smooth transition FOV
+							camera.fov += (targetFov - camera.fov) * 0.1;
+							camera.updateProjectionMatrix();
+
+							// Smooth hotspot scale animation
+							spriteHotspots.forEach(sprite => {
+								const currentScale = sprite.scale.x;
+								const target = sprite.userData.targetScale || 40;
+								const newScale = THREE.MathUtils.lerp(currentScale, target, 0.1);
+								sprite.scale.set(newScale, newScale, 1);
+							});
+
+							controls.update();
+							renderer.render(scene, camera);
+						}
+
+						// Klik pada hotspot
+						document.addEventListener('click', function (event) {
+							const mouseClick = new THREE.Vector2(
+								(event.clientX / window.innerWidth) * 2 - 1,
+								-(event.clientY / window.innerHeight) * 2 + 1
+							);
+
+							const clickRaycaster = new THREE.Raycaster();
+							clickRaycaster.setFromCamera(mouseClick, camera);
+							const intersects = clickRaycaster.intersectObjects(spriteHotspots);
+
+							if (intersects.length > 0) {
+								const clicked = intersects[0].object;
+								if (clicked.userData.onClick) clicked.userData.onClick();
+							}
+						});
+						
+						
+						
+						
+						
+						
+						function hideTemp(){
+							$("#tmp").fadeOut();
+							setTimeout(function(){
+								$("#tmpcontent").html("");
+							},1000);
+						}
+						
+						function showMedia(type, content){
+							switch(type){
+								case 1 :
+									//Image
+									$("#tmpcontent").html("<img src='"+content+"' style='width: 100%;'>");
+									$("#tmp").fadeIn();
+									break;
+								case 2 :
+									//Video
+									$("#tmpcontent").html("<video id='webvideo' controls autoplay style='width: 100%; height: 100%;'><source src='" +content+ "' type='video/mp4'> Your browser does not support the video tag. </video>");
+									$("#tmp").fadeIn();
+									break;
+								case 3 :
+									//Audio
+									$("#tmpcontent").html("<audio controls style='width: 100%;'><source src='"+content+"' type='audio/ogg'>Your browser does not support the audio tag.</audio>");
+									$("#tmp").fadeIn();
+									break;
+								case 4 :
+									//PDF
+									$("#tmpcontent").html("<iframe src='pdfjs/web/viewer.html?file=../../"+content+"' style='width: 100%; height: 99%;'></iframe>");
+									$("#tmp").fadeIn();
+									break;
+							}
+						}
+						
+						
+						/*customjs*/
+
+
+			/*customjs-end*/
+					</script>
+				</body>
+			</html>
