@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rambah - Kompleks Makam Raja-Raja Rambah</title>
+    <meta name="description" content="Jelajahi Kompleks Makam Raja-Raja Rambah melalui tur virtual 360°.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../../assets/icon.png">
+    <link rel="shortcut icon" type="image/png" href="../../assets/icon.png">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --accent: #d97706;
+            --accent-hover: #92400e;
+            --bg-global: linear-gradient(180deg, rgba(253, 254, 254, 0.98) 0%, rgba(253, 254, 253, 0.97) 2%, rgba(254, 254, 253, 0.96) 4%, rgba(254, 253, 252, 0.95) 6%, rgba(254, 253, 251, 0.94) 8%, rgba(255, 254, 252, 0.93) 10%, rgba(254, 253, 251, 0.94) 12%, rgba(254, 253, 252, 0.95) 14%, rgba(254, 254, 253, 0.96) 16%, rgba(253, 254, 253, 0.97) 18%, rgba(253, 254, 254, 0.98) 20%, rgba(254, 254, 253, 0.97) 22%, rgba(254, 253, 252, 0.96) 24%, rgba(254, 253, 251, 0.95) 26%, rgba(255, 254, 252, 0.94) 28%, rgba(254, 253, 251, 0.93) 30%, rgba(254, 253, 252, 0.94) 32%, rgba(254, 254, 253, 0.95) 34%, rgba(253, 254, 253, 0.96) 36%, rgba(253, 254, 254, 0.97) 38%, rgba(254, 254, 253, 0.98) 40%, rgba(254, 253, 252, 0.97) 42%, rgba(254, 253, 251, 0.96) 44%, rgba(255, 254, 252, 0.95) 46%, rgba(254, 253, 251, 0.94) 48%, rgba(254, 253, 252, 0.93) 50%, rgba(254, 254, 253, 0.94) 52%, rgba(253, 254, 253, 0.95) 54%, rgba(253, 254, 254, 0.96) 56%, rgba(254, 254, 253, 0.97) 58%, rgba(254, 253, 252, 0.98) 60%, rgba(254, 253, 251, 0.97) 62%, rgba(255, 254, 252, 0.96) 64%, rgba(254, 253, 251, 0.95) 66%, rgba(254, 253, 252, 0.94) 68%, rgba(254, 254, 253, 0.93) 70%, rgba(253, 254, 253, 0.94) 72%, rgba(253, 254, 254, 0.95) 74%, rgba(254, 254, 253, 0.96) 76%, rgba(254, 253, 252, 0.97) 78%, rgba(254, 253, 251, 0.98) 80%, rgba(255, 254, 252, 0.97) 82%, rgba(254, 253, 251, 0.96) 84%, rgba(254, 253, 252, 0.95) 86%, rgba(254, 254, 253, 0.94) 88%, rgba(253, 254, 253, 0.93) 90%, rgba(253, 254, 254, 0.94) 92%, rgba(254, 254, 253, 0.95) 94%, rgba(254, 253, 252, 0.96) 96%, rgba(254, 253, 251, 0.97) 98%, rgba(255, 254, 252, 0.98) 100%);
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+            --surface: rgba(255, 255, 255, 0.95);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+            --radius-md: 16px;
+            --radius-lg: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: var(--bg-global);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.7;
+            margin: 0 20px;
+        }
+
+        .page-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: transparent;
+            border-radius: 0;
+            overflow: visible;
+            box-shadow: none;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 15px;
+            background: transparent;
+            backdrop-filter: none;
+        }
+
+        .header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 8px;
+            text-shadow: none;
+        }
+
+        .header p {
+            font-size: 1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 12px;
+            background: transparent;
+            backdrop-filter: none;
+            margin: 20px 0;
+        }
+
+        .btn {
+            padding: 8px 18px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: none;
+        }
+
+        .btn-back {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-back:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: none;
+        }
+
+        .btn-map {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-map:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: none;
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        /* 360 Viewer Section */
+        .viewer-section {
+            position: relative;
+            overflow: hidden;
+            height: 60vh;
+            min-height: 500px;
+            background: transparent;
+            padding: 15px;
+        }
+
+        .viewer-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+            border-radius: 25px;
+            box-shadow: none;
+        }
+
+        /* Tour Controls Overlay */
+        .tour-controls-overlay {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .tour-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: none;
+        }
+
+        .tour-btn.primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .tour-btn.secondary {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-main);
+        }
+
+        .tour-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: none;
+        }
+
+        /* Info Section */
+        .info-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            color: #333;
+            backdrop-filter: none;
+            border-radius: 20px;
+            border: none;
+        }
+
+        .info-section h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.2rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            border-bottom: none;
+        }
+
+        .info-section p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
+        /* Highlights */
+        .highlights {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 30px;
+            border-radius: 20px;
+            border-left: none;
+            margin: 30px 0;
+            box-shadow: none;
+        }
+
+        .highlights h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .highlights ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .highlights li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .highlights li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .highlights li:last-child {
+            border-bottom: none;
+        }
+
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            border: none;
+            transition: all 0.3s ease;
+            box-shadow: none;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: none;
+        }
+
+        .feature i {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+
+        .feature h4 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        .feature p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            background: transparent;
+            backdrop-filter: none;
+            margin-top: 40px;
+        }
+
+        .footer p {
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        /* Map Modal */
+        .map-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .map-modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: none;
+        }
+
+        .map-modal-header {
+            background: var(--accent);
+            color: white;
+            padding: 20px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .map-modal-header h3 {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .map-modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+        }
+
+        .map-modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .map-modal-body {
+            padding: 20px;
+        }
+
+        .map-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .map-info p {
+            margin: 8px 0;
+            color: var(--text-main);
+        }
+
+        .map-placeholder {
+            background: #e9ecef;
+            border: 2px dashed #adb5bd;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                margin: 0 10px;
+            }
+
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tour-controls-overlay {
+                bottom: 40px;
+            }
+
+            .info-section {
+                padding: 25px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .map-modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                margin: 0 5px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .tour-controls-overlay {
+                bottom: 35px;
+            }
+
+            .info-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Rambah Virtual Tour 360°</h1>
+            <p>Jelajahi Kompleks Makam Raja-Raja Rambah melalui pengalaman virtual yang memukau</p>
+        </header>
+
+        <!-- Navigation Buttons -->
+        <nav class="nav-buttons">
+            <a href="../../index.html" class="btn btn-back">
+                <i class="fas fa-arrow-left"></i>
+                Kembali ke Beranda
+            </a>
+            <button class="btn btn-map" onclick="showMap()">
+                <i class="fas fa-map-marker-alt"></i>
+                Tampilkan Peta
+            </button>
+        </nav>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- 360 Viewer Section -->
+            <div class="viewer-section">
+                <iframe 
+                    src="index.html" 
+                    class="viewer-iframe" 
+                    title="Tur Virtual 360° Rambah"
+                    allowfullscreen>
+                </iframe>
+                
+                <!-- Tour Controls Overlay -->
+                <div class="tour-controls-overlay">
+                    <button class="tour-btn primary" onclick="refreshTour()">
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh Tour
+                    </button>
+                    <button class="tour-btn secondary" onclick="fullscreenTour()">
+                        <i class="fas fa-expand"></i>
+                        Fullscreen
+                    </button>
+                </div>
+            </div>
+
+            <!-- Info Section -->
+            <div class="info-section">
+                <h2>Tentang Kompleks Makam Raja-Raja Rambah</h2>
+                <p>
+                    Kompleks Makam Raja-Raja Rambah adalah situs bersejarah penting di Rokan Hulu. Di sini terdapat pusara para raja dan bangsawan dengan nilai historis dan spiritual yang tinggi.
+                </p>
+                
+                <div class="highlights">
+                    <h3>🌟 Keunggulan Situs</h3>
+                    <ul>
+                        <li>Arsitektur tradisional yang unik dan bernilai budaya</li>
+                        <li>Lokasi strategis dekat Sungai Rokan Kanan</li>
+                        <li>Suasana spiritual yang tenang</li>
+                        <li>Area taman yang asri</li>
+                        <li>Spot fotografi dengan pemandangan indah</li>
+                    </ul>
+                </div>
+
+                <p>
+                    Situs ini tidak hanya menjadi destinasi wisata sejarah, tetapi juga tempat ziarah dan refleksi spiritual. Setiap sudut kompleks ini menceritakan kisah kejayaan kerajaan masa lalu.
+                </p>
+
+                <!-- Features -->
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-landmark"></i>
+                        <h4>Arsitektur Tradisional</h4>
+                        <p>Ornamen khas kerajaan masa lalu</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-water"></i>
+                        <h4>Lokasi Sungai</h4>
+                        <p>Di tepi Sungai Rokan Kanan</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-pray"></i>
+                        <h4>Nilai Spiritual</h4>
+                        <p>Tempat ziarah dan refleksi</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-camera"></i>
+                        <h4>Spot Fotografi</h4>
+                        <p>Sudut-sudut indah untuk dokumentasi</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 Rambah Virtual Tour 360°. Dibuat dengan ❤️ untuk pelestarian budaya Rokan Hulu.</p>
+        </footer>
+    </div>
+
+    <!-- Map Modal -->
+    <div id="mapModal" class="map-modal">
+        <div class="map-modal-content">
+            <div class="map-modal-header">
+                <h3>Lokasi Rambah</h3>
+                <button class="map-modal-close" onclick="hideMap()">&times;</button>
+            </div>
+            <div class="map-modal-body">
+                <div class="map-info">
+                    <p><strong>Alamat:</strong> Desa Rambah, Kecamatan Rambah, Rokan Hulu, Riau</p>
+                    <p><strong>Koordinat:</strong> 1.2345, 101.2345</p>
+                    <p><strong>Jarak:</strong> ±30 km dari pusat kota</p>
+                </div>
+                <div class="map-placeholder">
+                    <p>Peta Google Maps akan ditampilkan di sini</p>
+                    <p>Anda dapat menambahkan embed Google Maps di sini</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize AOS
+        if (typeof AOS !== 'undefined') {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-out-cubic',
+                once: true,
+                offset: 100
+            });
+        }
+
+        // Map functionality
+        function showMap() {
+            document.getElementById('mapModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideMap() {
+            document.getElementById('mapModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('mapModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideMap();
+            }
+        });
+
+        // Tour functionality
+        function refreshTour() {
+            const iframe = document.querySelector('.viewer-iframe');
+            if (iframe) {
+                iframe.src = iframe.src;
+            }
+        }
+
+        function fullscreenTour() {
+            const iframe = document.querySelector('.viewer-iframe');
+            if (iframe && iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            }
+        }
+
+        // Navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add smooth scrolling for navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

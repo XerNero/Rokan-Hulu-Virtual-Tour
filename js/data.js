@@ -44,7 +44,7 @@ window.SITE_DATA = {
         main: "var(--hapanasan-main)",
         accent: "var(--hapanasan-accent)"
       },
-      fullTourHref: "#",
+      fullTourHref: "3sixty/hapanasan/home.html",
       address: "Kawasan Wisata Gunong Bonsu, Kec. Rambah, Rambah Tengah Hulu, Rokan Hulu, Riau",
       coordinates: "-0.2345, 100.6789",
       distance: "±9 km dari pusat kota Pasir Pengaraian"
@@ -66,7 +66,7 @@ window.SITE_DATA = {
         main: "var(--rambah-main)",
         accent: "var(--rambah-accent)"
       },
-      fullTourHref: "#",
+      fullTourHref: "3sixty/rambah/home.html",
       address: "Kompleks Makam Raja-Raja Rambah, Kec. Rambah, Rokan Hulu, Riau",
       coordinates: "-0.3456, 100.7890",
       distance: "±12 km dari pusat kota Pasir Pengaraian"

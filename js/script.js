@@ -133,10 +133,11 @@
             </div>
           </div>
           
-          <!-- Tombol Mulai Tour dan Map -->
+          <!-- Tombol Mulai Tour, Map, dan QR Code -->
           <div class="section-actions" style="margin-top: 1rem;">
-            <a class="btn btn-primary" href="${s.fullTourHref}" target="_blank" rel="noopener">Mulai Tour</a>
+            <a class="btn btn-secondary" href="${s.fullTourHref}" target="_blank" rel="noopener">Mulai Tour</a>
             <button class="btn btn-secondary map-toggle" type="button" aria-expanded="false" aria-controls="map-${s.id}">Lokasi</button>
+            <button class="btn btn-secondary qr-toggle" type="button" data-section="${s.id}">QR Code</button>
           </div>
           
           <!-- Container Map -->
@@ -763,6 +764,199 @@
     }
   }
 
+  // QR Code functionality
+  function setupQRCodeToggle() {
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('qr-toggle')) {
+        const sectionId = e.target.getAttribute('data-section');
+        showQRModal(sectionId);
+      }
+    });
+  }
+
+  function showQRModal(sectionId) {
+    const modal = document.getElementById('qr-modal');
+    const title = document.getElementById('qr-modal-title');
+    const image = document.getElementById('qr-code-image');
+    
+    // Mapping section to QR files and titles
+    const qrData = {
+      'mamic': {
+        file: 'assets/mamic-qr.png',
+        title: 'QR Code - MAMIC',
+        name: 'MAMIC Virtual Tour'
+      },
+      'hapanasan': {
+        file: 'assets/hapanasan-qr.png',
+        title: 'QR Code - Hapanasan',
+        name: 'Hapanasan Virtual Tour'
+      },
+      'rambah': {
+        file: 'assets/rambah-qr.png',
+        title: 'QR Code - Rambah',
+        name: 'Rambah Virtual Tour'
+      }
+    };
+
+    const data = qrData[sectionId];
+    if (data) {
+      title.textContent = data.title;
+      image.src = data.file;
+      image.alt = data.name;
+      image.setAttribute('data-filename', `${sectionId}-qr.png`);
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  window.closeQRModal = function() {
+    const modal = document.getElementById('qr-modal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  };
+
+  window.downloadQRCode = function() {
+    const image = document.getElementById('qr-code-image');
+    const filename = image.getAttribute('data-filename') || 'qr-code.png';
+    
+    // Create a link and trigger download
+    const link = document.createElement('a');
+    link.href = image.src;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  window.copyQRCode = async function() {
+    const image = document.getElementById('qr-code-image');
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    
+    // Check if clipboard API is supported
+    if (!navigator.clipboard || !window.ClipboardItem) {
+      console.log('Clipboard API not supported, using fallback');
+      fallbackCopy();
+      return;
+    }
+    
+    try {
+      // Show loading state
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Copying...';
+      btn.disabled = true;
+      
+      // Create a new image element to avoid CORS issues
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      
+      img.onload = async function() {
+        try {
+          // Convert image to canvas and then to blob
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          canvas.width = img.naturalWidth || img.width;
+          canvas.height = img.naturalHeight || img.height;
+          ctx.drawImage(img, 0, 0);
+          
+          // Convert to blob
+          canvas.toBlob(async (blob) => {
+            if (!blob) {
+              console.error('Failed to create blob');
+              fallbackCopy();
+              return;
+            }
+            
+            try {
+              const item = new ClipboardItem({ 'image/png': blob });
+              await navigator.clipboard.write([item]);
+              
+              // Show success message
+              btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+              btn.style.background = '#22c55e';
+              btn.disabled = false;
+              
+              setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = '';
+              }, 2000);
+              
+            } catch (err) {
+              console.error('Failed to write to clipboard:', err);
+              btn.disabled = false;
+              fallbackCopy();
+            }
+          }, 'image/png');
+          
+        } catch (err) {
+          console.error('Failed to process image:', err);
+          btn.disabled = false;
+          fallbackCopy();
+        }
+      };
+      
+      img.onerror = function() {
+        console.error('Failed to load image for copying');
+        btn.disabled = false;
+        fallbackCopy();
+      };
+      
+      // Load the image
+      img.src = image.src;
+      
+    } catch (err) {
+      console.error('Failed to copy QR code:', err);
+      btn.disabled = false;
+      fallbackCopy();
+    }
+  };
+
+  function fallbackCopy() {
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    
+    // Reset button state
+    btn.disabled = false;
+    
+    // Show helpful instructions
+    btn.innerHTML = '<i class="fas fa-info-circle"></i> Lihat Instruksi';
+    btn.style.background = '#f59e0b';
+    
+    // Show instructions modal or alert
+    setTimeout(() => {
+      const instructionText = `Untuk menyalin QR Code:
+      
+1. Klik kanan pada gambar QR Code
+2. Pilih "Copy Image" atau "Salin Gambar"
+3. Paste di aplikasi yang diinginkan
+
+Atau gunakan tombol Download untuk menyimpan gambar.`;
+      
+      if (confirm(instructionText + '\n\nKlik OK untuk menutup.')) {
+        btn.innerHTML = originalText;
+        btn.style.background = '';
+      } else {
+        btn.innerHTML = originalText;
+        btn.style.background = '';
+      }
+    }, 500);
+  }
+
+  // Close modal when clicking outside
+  document.addEventListener('click', (e) => {
+    const modal = document.getElementById('qr-modal');
+    if (e.target === modal) {
+      closeQRModal();
+    }
+  });
+
+  // Close modal with Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeQRModal();
+    }
+  });
+
   function init() {
     setYear();
     setupNavToggle();
@@ -772,6 +966,7 @@
     renderSections();
     setupAccordion();
     setupMapToggle();
+    setupQRCodeToggle();
     setupThreeSixtyLazy();
     setupActiveNavHighlight();
   }

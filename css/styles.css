@@ -707,7 +707,6 @@ p {
 
 .section--mamic .section-header h2 {
   color: var(--mamic-main);
-  font-family: "Amiri", "Poppins", serif;
 }
 
 .section--mamic .btn-primary {
@@ -1334,4 +1333,181 @@ p {
 
 .viewer-overlay .activate-btn {
   pointer-events: auto;
+}
+
+/* QR Code Modal */
+.qr-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.qr-modal-content {
+  background: white;
+  border-radius: var(--radius-lg);
+  max-width: 90vw;
+  max-height: 90vh;
+  width: 500px;
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+}
+
+.qr-modal-header {
+  background: var(--accent);
+  color: white;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.qr-modal-header h3 {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.qr-modal-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.8rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.qr-modal-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.qr-modal-body {
+  padding: 2rem;
+  text-align: center;
+}
+
+.qr-code-container {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: var(--radius-md);
+  display: inline-block;
+}
+
+.qr-code-container img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.qr-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.qr-actions .btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.qr-actions .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.qr-info {
+  background: #e3f2fd;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--accent);
+}
+
+.qr-info p {
+  margin: 0;
+  color: var(--text-main);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .qr-modal-content {
+    width: 95vw;
+    margin: 1rem;
+  }
+  
+  .qr-modal-body {
+    padding: 1.5rem;
+  }
+  
+  .qr-actions {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .qr-actions .btn {
+    width: 100%;
+    max-width: 250px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .qr-actions {
+    gap: 0.5rem;
+  }
+  
+  .qr-actions .btn {
+    max-width: 200px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+  }
+  
+  .qr-modal-header h3 {
+    font-size: 1.1rem;
+  }
 }

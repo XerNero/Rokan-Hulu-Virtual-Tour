@@ -118,6 +118,32 @@
     </div>
   </footer>
 
+  <!-- QR Code Modal -->
+  <div id="qr-modal" class="qr-modal" style="display: none;">
+    <div class="qr-modal-content">
+      <div class="qr-modal-header">
+        <h3 id="qr-modal-title">QR Code</h3>
+        <button class="qr-modal-close" onclick="closeQRModal()">&times;</button>
+      </div>
+      <div class="qr-modal-body">
+        <div class="qr-code-container">
+          <img id="qr-code-image" src="" alt="QR Code" />
+        </div>
+        <div class="qr-actions">
+          <button class="btn btn-primary" onclick="downloadQRCode()">
+            <i class="fas fa-download"></i> Download
+          </button>
+          <button class="btn btn-secondary" onclick="copyQRCode()">
+            <i class="fas fa-copy"></i> Copy Image
+          </button>
+        </div>
+        <div class="qr-info">
+          <p><strong>Scan QR Code</strong> untuk mengakses tur virtual langsung di smartphone Anda!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- AOS JS via CDN -->
   <script defer src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.min.js"></script>
 
