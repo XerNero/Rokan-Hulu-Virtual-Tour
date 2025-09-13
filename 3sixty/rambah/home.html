@@ -18,11 +18,17 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Leaflet Fullscreen Plugin -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen@2.4.0/Control.FullScreen.css" />
+    
     <style>
         :root {
-            --accent: #d97706;
-            --accent-hover: #92400e;
-            --bg-global: linear-gradient(180deg, rgba(253, 254, 254, 0.98) 0%, rgba(253, 254, 253, 0.97) 2%, rgba(254, 254, 253, 0.96) 4%, rgba(254, 253, 252, 0.95) 6%, rgba(254, 253, 251, 0.94) 8%, rgba(255, 254, 252, 0.93) 10%, rgba(254, 253, 251, 0.94) 12%, rgba(254, 253, 252, 0.95) 14%, rgba(254, 254, 253, 0.96) 16%, rgba(253, 254, 253, 0.97) 18%, rgba(253, 254, 254, 0.98) 20%, rgba(254, 254, 253, 0.97) 22%, rgba(254, 253, 252, 0.96) 24%, rgba(254, 253, 251, 0.95) 26%, rgba(255, 254, 252, 0.94) 28%, rgba(254, 253, 251, 0.93) 30%, rgba(254, 253, 252, 0.94) 32%, rgba(254, 254, 253, 0.95) 34%, rgba(253, 254, 253, 0.96) 36%, rgba(253, 254, 254, 0.97) 38%, rgba(254, 254, 253, 0.98) 40%, rgba(254, 253, 252, 0.97) 42%, rgba(254, 253, 251, 0.96) 44%, rgba(255, 254, 252, 0.95) 46%, rgba(254, 253, 251, 0.94) 48%, rgba(254, 253, 252, 0.93) 50%, rgba(254, 254, 253, 0.94) 52%, rgba(253, 254, 253, 0.95) 54%, rgba(253, 254, 254, 0.96) 56%, rgba(254, 254, 253, 0.97) 58%, rgba(254, 253, 252, 0.98) 60%, rgba(254, 253, 251, 0.97) 62%, rgba(255, 254, 252, 0.96) 64%, rgba(254, 253, 251, 0.95) 66%, rgba(254, 253, 252, 0.94) 68%, rgba(254, 254, 253, 0.93) 70%, rgba(253, 254, 253, 0.94) 72%, rgba(253, 254, 254, 0.95) 74%, rgba(254, 254, 253, 0.96) 76%, rgba(254, 253, 252, 0.97) 78%, rgba(254, 253, 251, 0.98) 80%, rgba(255, 254, 252, 0.97) 82%, rgba(254, 253, 251, 0.96) 84%, rgba(254, 253, 252, 0.95) 86%, rgba(254, 254, 253, 0.94) 88%, rgba(253, 254, 253, 0.93) 90%, rgba(253, 254, 254, 0.94) 92%, rgba(254, 254, 253, 0.95) 94%, rgba(254, 253, 252, 0.96) 96%, rgba(254, 253, 251, 0.97) 98%, rgba(255, 254, 252, 0.98) 100%);
+            --accent: #4ade80;
+            --accent-hover: #22c55e;
+            --bg-global: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(254, 255, 254, 0.97) 2%, rgba(254, 255, 254, 0.96) 4%, rgba(253, 254, 253, 0.95) 6%, rgba(253, 254, 253, 0.94) 8%, rgba(252, 253, 252, 0.93) 10%, rgba(252, 253, 252, 0.92) 12%, rgba(251, 253, 251, 0.91) 14%, rgba(251, 253, 251, 0.9) 16%, rgba(250, 252, 250, 0.89) 18%, rgba(250, 252, 250, 0.88) 20%, rgba(249, 252, 249, 0.87) 22%, rgba(249, 252, 249, 0.86) 24%, rgba(248, 252, 249, 0.85) 26%, rgba(248, 252, 249, 0.84) 28%, rgba(247, 251, 248, 0.83) 30%, rgba(247, 251, 248, 0.82) 32%, rgba(246, 251, 247, 0.81) 34%, rgba(246, 251, 247, 0.8) 36%, rgba(245, 250, 246, 0.79) 38%, rgba(245, 250, 246, 0.78) 40%, rgba(244, 250, 245, 0.77) 42%, rgba(244, 250, 245, 0.76) 44%, rgba(243, 249, 244, 0.75) 46%, rgba(243, 249, 244, 0.74) 48%, rgba(242, 249, 243, 0.73) 50%, rgba(242, 249, 243, 0.74) 52%, rgba(243, 249, 244, 0.75) 54%, rgba(243, 249, 244, 0.76) 56%, rgba(244, 250, 245, 0.77) 58%, rgba(244, 250, 245, 0.78) 60%, rgba(245, 250, 246, 0.79) 62%, rgba(245, 250, 246, 0.8) 64%, rgba(246, 251, 247, 0.81) 66%, rgba(246, 251, 247, 0.82) 68%, rgba(247, 251, 248, 0.83) 70%, rgba(247, 251, 248, 0.84) 72%, rgba(248, 252, 249, 0.85) 74%, rgba(248, 252, 249, 0.86) 76%, rgba(249, 252, 249, 0.87) 78%, rgba(249, 252, 249, 0.88) 80%, rgba(250, 252, 250, 0.89) 82%, rgba(250, 252, 250, 0.9) 84%, rgba(251, 253, 251, 0.91) 86%, rgba(251, 253, 251, 0.92) 88%, rgba(252, 253, 252, 0.93) 90%, rgba(252, 253, 252, 0.94) 92%, rgba(253, 254, 253, 0.95) 94%, rgba(253, 254, 253, 0.96) 96%, rgba(254, 255, 254, 0.97) 98%, rgba(254, 255, 254, 0.98) 100%);
             --text-main: #1f2937;
             --text-muted: #4b5563;
             --surface: rgba(255, 255, 255, 0.95);
@@ -36,6 +42,43 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+        
+        /* TOMBOL SERAGAM DENGAN WEBSITE UTAMA */
+        .btn, .tour-btn {
+            background: var(--accent) !important;
+            background-color: var(--accent) !important;
+            background-image: none !important;
+            border: none !important;
+            color: black !important;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        
+        .btn:hover, .tour-btn:hover {
+            background: var(--accent-hover) !important;
+            background-color: var(--accent-hover) !important;
+            background-image: none !important;
+            color: black !important;
+            transform: translateY(-2px);
+        }
+        
+        .tour-btn.secondary {
+            background: rgba(255, 255, 255, 0.9) !important;
+            background-color: rgba(255, 255, 255, 0.9) !important;
+            color: var(--text-main) !important;
+        }
+        
+        .tour-btn.secondary:hover {
+            background: rgba(255, 255, 255, 1) !important;
+            background-color: rgba(255, 255, 255, 1) !important;
         }
 
         body {
@@ -91,42 +134,6 @@
             margin: 20px 0;
         }
 
-        .btn {
-            padding: 8px 18px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            text-decoration: none;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: none;
-        }
-
-        .btn-back {
-            background: var(--accent);
-            color: white;
-        }
-
-        .btn-back:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-            box-shadow: none;
-        }
-
-        .btn-map {
-            background: var(--accent);
-            color: white;
-        }
-
-        .btn-map:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-            box-shadow: none;
-        }
 
         /* Main Layout */
         .main-layout {
@@ -166,32 +173,14 @@
             z-index: 10;
         }
 
-        .tour-btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 25px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: none;
-        }
-
         .tour-btn.primary {
-            background: var(--accent);
-            color: white;
+            background: var(--accent) !important;
+            color: black !important;
         }
 
-        .tour-btn.secondary {
-            background: rgba(255, 255, 255, 0.9);
-            color: var(--text-main);
-        }
-
-        .tour-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: none;
+        .tour-btn.primary:hover {
+            background: var(--accent-hover) !important;
+            color: black !important;
         }
 
         /* Info Section */
@@ -548,7 +537,8 @@
 
         <!-- Footer -->
         <footer class="footer">
-            <p>&copy; 2025 Rambah Virtual Tour 360°. Dibuat dengan ❤️ untuk pelestarian budaya Rokan Hulu.</p>
+            <p>&copy; 2025 Makam Raja Rambah (Kompleks Makam Raja-Raja Rambah) Virtual Tour 360°. Dibuat dengan ❤️ untuk kemajuan pariwisata Rokan Hulu.</p>
+            <p>Semua informasi bersumber dari data resmi MAMIC dan publikasi terkait.</p>
         </footer>
     </div>
 
@@ -565,13 +555,16 @@
                     <p><strong>Koordinat:</strong> 1.2345, 101.2345</p>
                     <p><strong>Jarak:</strong> ±30 km dari pusat kota</p>
                 </div>
-                <div class="map-placeholder">
-                    <p>Peta Google Maps akan ditampilkan di sini</p>
-                    <p>Anda dapat menambahkan embed Google Maps di sini</p>
-                </div>
+                <div id="interactive-map" style="height: 300px; border-radius: 15px; overflow: hidden;"></div>
             </div>
         </div>
     </div>
+
+    <!-- Leaflet Maps -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Leaflet Fullscreen Plugin -->
+    <script src="https://unpkg.com/leaflet.fullscreen@2.4.0/Control.FullScreen.js"></script>
 
     <script>
         // Initialize AOS
@@ -585,14 +578,113 @@
         }
 
         // Map functionality
+        let leafletMap = null;
+
         function showMap() {
-            document.getElementById('mapModal').style.display = 'block';
+            const modal = document.getElementById('mapModal');
+            modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
+            
+            // Initialize map after modal is shown
+            setTimeout(() => {
+                if (!leafletMap) {
+                    initLeafletMap();
+                }
+            }, 100);
         }
 
         function hideMap() {
             document.getElementById('mapModal').style.display = 'none';
             document.body.style.overflow = 'auto';
+        }
+
+        function initLeafletMap() {
+            // Check if Leaflet is loaded
+            if (typeof L === 'undefined') {
+                console.error('Leaflet not loaded');
+                return;
+            }
+
+            const mapContainer = document.getElementById('interactive-map');
+            if (!mapContainer || leafletMap) return;
+
+            // Rambah coordinates
+            const coords = [0.9234444444444444, 100.34013888888889];
+            const locationData = {
+                title: 'Makam Raja Rambah (Kompleks Makam Raja-Raja Rambah)',
+                address: 'Desa Rambah, Kecamatan Rambah, Rokan Hulu, Riau',
+                distance: '± 20 km dari pusat kota'
+            };
+
+            // Create map
+            leafletMap = L.map('interactive-map', {
+                zoomControl: true,
+                scrollWheelZoom: true,
+                doubleClickZoom: true,
+                boxZoom: true,
+                keyboard: true,
+                dragging: true,
+                touchZoom: true
+            }).setView(coords, 16);
+
+            // Add tile layers
+            const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(leafletMap);
+
+            const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '© Esri',
+                maxZoom: 19
+            });
+
+            const terrainLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenTopoMap',
+                maxZoom: 17
+            });
+
+            // Layer control
+            const baseMaps = {
+                "Peta Jalan": osmLayer,
+                "Satelit": satelliteLayer,
+                "Topografi": terrainLayer
+            };
+            L.control.layers(baseMaps).addTo(leafletMap);
+
+            // Add custom marker
+            const customIcon = L.divIcon({
+                html: '<div style="background: var(--accent); border-radius: 50%; width: 20px; height: 20px; border: 3px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3);"></div>',
+                className: 'custom-marker',
+                iconSize: [20, 20],
+                iconAnchor: [10, 10]
+            });
+
+            const marker = L.marker(coords, { icon: customIcon }).addTo(leafletMap);
+            
+            // Popup content
+            const popupContent = `
+                <div style="font-family: 'Poppins', sans-serif; min-width: 200px;">
+                    <h3 style="margin: 0 0 10px 0; color: var(--accent); font-size: 1.1rem;">${locationData.title}</h3>
+                    <p style="margin: 5px 0; font-size: 0.9rem;"><strong>📍 Alamat:</strong><br>${locationData.address}</p>
+                    <p style="margin: 5px 0; font-size: 0.9rem;"><strong>📏 Jarak:</strong> ${locationData.distance}</p>
+                    <div style="margin-top: 10px; text-align: center;">
+                        <a href="https://www.google.com/maps?q=${coords[0]},${coords[1]}" target="_blank" 
+                           style="background: var(--accent); color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px; font-size: 0.8rem;">
+                            Buka di Google Maps
+                        </a>
+                    </div>
+                </div>
+            `;
+            
+            marker.bindPopup(popupContent).openPopup();
+
+            // Add scale bar
+            L.control.scale({ metric: true, imperial: false }).addTo(leafletMap);
+
+            // Add fullscreen control if available
+            if (L.control.fullscreen) {
+                leafletMap.addControl(new L.control.fullscreen());
+            }
         }
 
         // Close modal when clicking outside

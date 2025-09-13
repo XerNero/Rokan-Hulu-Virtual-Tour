@@ -1,77 +1,185 @@
 ## Rokan Hulu Virtual Tour 360
 
-Situs satu halaman (SPA) untuk menjelajah ikon wisata Kabupaten Rokan Hulu melalui pratinjau panorama 360° dan tur penuh per‑lokasi.
+Website tur virtual interaktif untuk menjelajahi destinasi wisata unggulan Kabupaten Rokan Hulu, Riau melalui teknologi panorama 360° yang memukau.
 
 ### ✨ Fitur Utama
-- Navbar sticky, smooth scroll, dan penanda menu aktif.
-- Hero bergambar dengan overlay lembut dan sudut membulat.
-- Tiga destinasi (MAMIC, Hapanasan, Makam Raja Rambah) dirender dari `js/data.js`.
-- Pratinjau panorama 360° inline menggunakan Pannellum (drag, zoom, fullscreen) — auto‑load.
-- Tombol “Mulai Tour” menuju tur penuh di folder `3sixty/` (berbasis Three.js).
-- Peta lokasi per‑section memakai Leaflet (layer control, marker, fullscreen, scale bar).
-- Aksesibilitas: semantic HTML, fokus jelas, kontras memadai, dukung `prefers-reduced-motion`.
-- Responsif dan performa: lazy resources, CSS ringan, CDN.
 
-### 🛠️ Teknologi
-- HTML, CSS, JavaScript murni.
-- CDN: Pannellum 2.5.6, Leaflet 1.9.4 (+ leaflet.fullscreen 2.4.0), AOS 2.3.4.
+#### 🎯 Tur Virtual 360°
+- **Auto-loading Pannellum viewer** dengan kontrol drag, zoom, dan fullscreen
+- **Tiga destinasi utama**: MAMIC, Air Panas Hapanasan, Kompleks Makam Raja-Raja Rambah
+- **Tur penuh interaktif** di folder `3sixty/` dengan navigasi antar ruang
+- **Responsive viewer** dengan tinggi optimal untuk semua device
 
-### 📦 Struktur Proyek (ringkas)
+#### 🗺️ Sistem Peta Interaktif
+- **Leaflet Maps** dengan multiple tile layers (OpenStreetMap, Satellite, Terrain)
+- **Marker custom** dengan popup informasi lokasi
+- **Fullscreen support** dan scale bar
+- **Koordinat akurat** untuk setiap destinasi wisata
+
+#### 📱 QR Code Generator
+- **QR Code modal** untuk setiap destinasi wisata
+- **Download QR Code** dalam format PNG
+- **Copy to Clipboard** dengan fallback support
+- **Mobile-friendly** untuk sharing langsung
+
+#### 🎨 User Interface Modern
+- **Gradient themes** unik per destinasi (Hijau-MAMIC, Biru-Hapanasan, Oranye-Rambah)
+- **Consistent button sizing** dengan CSS Grid layout
+- **Parallax hero background** dengan rounded corners
+- **Smooth animations** menggunakan AOS (Animate On Scroll)
+- **Dark/light adaptive** dengan backdrop blur effects
+
+#### ♿ Aksesibilitas & Performa
+- **Semantic HTML5** dengan proper ARIA labels
+- **Keyboard navigation** support
+- **Lazy loading** untuk gambar dan resources
+- **Prefers-reduced-motion** support
+- **SEO optimized** dengan meta tags lengkap
+
+### 🛠️ Teknologi Stack
+
+- **Frontend**: HTML5, CSS3, Vanilla JavaScript (ES6+)
+- **360° Viewer**: Pannellum 2.5.6
+- **Maps**: Leaflet 1.9.4 + Fullscreen Plugin 2.4.0
+- **Animations**: AOS (Animate On Scroll) 2.3.4
+- **Fonts**: Google Fonts (Poppins, Lato, Amiri)
+- **Icons**: Font Awesome 6.0.0
+
+### 📦 Struktur Proyek
+
 ```
-.
+Projek Pak Octa/
 ├─ index.html                 # Halaman utama (SPA)
-├─ assets/                    # Gambar & ikon (hero, preview 360, favicon)
-│  ├─ hero-mamic.jpg
-│  ├─ mamic-360.jpg
-│  ├─ hapanasan-360.jpg
-│  ├─ rambah-360.jpg
-│  └─ icon.png
+├─ assets/                    # Media files
+│  ├─ hero-mamic.jpg          # Hero background image
+│  ├─ mamic-360.jpg           # MAMIC preview
+│  ├─ hapanasan-360.jpg       # Hapanasan preview
+│  ├─ rambah-360.jpg          # Rambah preview
+│  ├─ mamic-qr.png           # QR Code MAMIC
+│  ├─ hapanasan-qr.png       # QR Code Hapanasan
+│  ├─ rambah-qr.png          # QR Code Rambah
+│  └─ icon.png               # Site favicon
 ├─ css/
-│  └─ styles.css              # Seluruh gaya situs
+│  └─ styles.css              # Complete stylesheet (1500+ lines)
 ├─ js/
-│  ├─ data.js                 # Data destinasi (title, desc, gambar, koordinat)
-│  ├─ script.js               # Render UI, init Pannellum & Leaflet, interaksi
-│  └─ three-sixty-init.js     # Utilitas tur 3D bila diperlukan
-└─ 3sixty/                    # Tur penuh per-lokasi (Three.js)
+│  ├─ data.js                 # Destinations data & configuration
+│  ├─ script.js               # Main application logic
+│  └─ three-sixty-init.js     # 360° tour utilities
+└─ 3sixty/                    # Full tour experiences
+   ├─ mamic/
+   │  ├─ home.html            # MAMIC tour landing
+   │  └─ index.html           # MAMIC 360° experience
+   ├─ hapanasan/
+   │  ├─ home.html            # Hapanasan tour landing
+   │  └─ index.html           # Hapanasan 360° experience
+   └─ rambah/
+      ├─ home.html            # Rambah tour landing
+      └─ index.html           # Rambah 360° experience
 ```
 
-### 🚀 Menjalankan Secara Lokal
-Tidak ada build step.
-1) Clone/pindahkan project ini.
-2) Buka `index.html` di browser modern.
+### 🚀 Cara Menjalankan
 
-Tips: gunakan ekstensi “Live Server” (VS Code) untuk auto‑reload.
+#### Lokal Development
+1. **Clone repository** atau download project
+2. **Buka dengan browser**: Langsung buka `index.html` di browser modern
+3. **Rekomendasi**: Gunakan VS Code + Live Server extension untuk auto-reload
 
-### ⚙️ Konfigurasi Konten
-- Edit `js/data.js` untuk judul, deskripsi, sumber, gambar pratinjau, koordinat, tautan tur penuh.
-- Ganti gambar hero di `assets/hero-mamic.jpg` (opsional sesuaikan overlay di `.hero-overlay`).
-- Favicon: `assets/icon.png` sudah ditautkan pada `<head>`.
-- Tinggi pratinjau 360: ubah `.viewer-aspect { height: … }` (mis. `40vh`) di `css/styles.css`.
+#### Production Deploy
+Tidak memerlukan build process, ready untuk deploy ke GitHub Pages, Netlify, Vercel, atau shared hosting.
 
-### 🧭 Pannellum (Pratinjau 360)
-- Inisialisasi di `initPannellumViewer` (`js/script.js`).
-- Opsi: `autoLoad`, `mouseZoom`, `touchEnabled`, `showControls`, `showFullscreenCtrl`.
-- Pastikan CSS dan JS Pannellum ter‑load dari CDN pada `index.html`.
+### ⚙️ Konfigurasi & Customization
 
-### 🗺️ Leaflet (Peta Per‑Lokasi)
-- Dipanggil saat tombol “Lokasi” ditekan.
-- Memiliki beberapa tile layer + marker kustom + fullscreen + scale bar.
+#### 🎯 Mengedit Konten
+Edit file `js/data.js` untuk mengubah:
+- Judul dan deskripsi destinasi
+- Koordinat GPS lokasi
+- Link gambar preview 360°
+- URL tur penuh
+
+#### 🎨 Styling Custom
+File `css/styles.css` mengatur:
+- **Color themes** per destinasi (`--mamic-main`, `--hapanasan-main`, `--rambah-main`)
+- **Viewer height**: ubah `.viewer-aspect { height: 40vh }`
+- **Button sizes**: sudah unified dengan CSS Grid
+- **Responsive breakpoints**: 768px dan 480px
+
+#### 🖼️ Asset Management
+- **Hero image**: ganti `assets/hero-mamic.jpg`
+- **Preview 360°**: ganti file di `assets/*-360.jpg`
+- **QR Codes**: update file di `assets/*-qr.png`
+- **Favicon**: ganti `assets/icon.png`
+
+### 🧭 Fitur Pannellum
+
+Auto-loading viewer dengan konfigurasi optimal:
+- Drag, zoom, dan touch support
+- Fullscreen controls
+- Auto-rotate untuk preview menarik
+- Responsive untuk semua device
+
+### 🗺️ Sistem Peta Leaflet
+
+Multiple tile layers dengan koordinat akurat:
+- **MAMIC**: Jl. Tuanku Tambusai Km 4, Pasir Pengaraian
+- **Hapanasan**: Desa Hapanasan, Kec. Rambah (±15 km dari kota)
+- **Rambah**: Kompleks Makam Raja-Raja Rambah (±20 km dari kota)
+
+### 📱 QR Code System
+
+- **Auto-generation**: QR codes untuk direct access ke tur
+- **Download**: Format PNG untuk sharing offline
+- **Copy**: Clipboard support dengan graceful fallback
+- **Mobile optimized**: Touch-friendly modal
 
 ### ☁️ Deploy ke GitHub Pages
-1) Push repo ke GitHub.
-2) Settings → Pages → Source: `Deploy from a branch`, branch: `main`, folder: `/ (root)`.
-3) Akses URL Pages yang diberikan.
 
-### 🔍 Troubleshooting Singkat
-- Pratinjau 360 tidak bisa digeser/zoom: cek CDN Pannellum; pastikan overlay tidak menutup canvas.
-- Tampilan terlalu tinggi/pendek: ubah `.viewer-aspect { height: … }` di CSS.
-- Gambar hero terlalu gelap: sesuaikan intensitas `.hero-overlay`.
+1. **Push ke GitHub**: Upload semua file ke repository
+2. **Enable Pages**: Settings → Pages → Deploy from main branch
+3. **Access**: Website akan tersedia di `username.github.io/repository-name`
 
-### 📄 Lisensi & Kredit
-- Kode sumber: MIT (opsional sesuaikan kebutuhan).
-- Konten ringkas: publikasi Pemkab Rokan Hulu & media setempat (Bisnis.com, RiauMagz, Media Center Riau, Riau Pos, Neliti, Rokapress, dll.).
+### 🔧 Troubleshooting
 
-—
-Dibuat untuk demo tur virtual 360 Rokan Hulu.
+#### Masalah Umum
+- **360° tidak bisa di-drag**: Periksa CDN Pannellum dan koneksi internet
+- **Peta tidak muncul**: Cek koneksi untuk Leaflet tiles
+- **QR Code tidak bisa di-copy**: Browser mungkin tidak support Clipboard API
+- **Hero image abu-abu**: Periksa path `assets/hero-mamic.jpg`
+
+#### Performance Tips
+- Gambar 360° sebaiknya ukuran < 2MB untuk loading cepat
+- Gunakan format WebP jika memungkinkan
+- Enable browser caching untuk production
+
+### 📊 Features Checklist
+
+- ✅ **Responsive Design** (Mobile-first approach)
+- ✅ **SEO Optimized** (Meta tags lengkap)
+- ✅ **Accessibility** (WCAG compliant)
+- ✅ **Performance** (Lazy loading, optimized assets)
+- ✅ **Cross-browser** (Modern browser support)
+- ✅ **Touch Support** (Mobile gestures)
+- ✅ **Keyboard Navigation** (Tab, Enter, Escape)
+
+### 📄 Lisensi & Credits
+
+#### Lisensi
+- **Code**: MIT License - bebas digunakan dan dimodifikasi
+- **Content**: Berdasarkan publikasi resmi Pemkab Rokan Hulu
+
+#### Sumber Konten
+- **Pemkab Rokan Hulu** - Data resmi destinasi wisata
+- **Media Partner**: Bisnis.com, RiauMagz, Media Center Riau, Riau Pos, Neliti, Rokapress
+
+#### Technology Credits
+- **Pannellum** - Matthew Petroff (360° viewer)
+- **Leaflet** - Vladimir Agafonkin (maps)
+- **AOS** - Michał Sajnóg (scroll animations)
+- **Font Awesome** - Dave Gandy (icons)
+
+---
+
+**Dibuat dengan ❤️ untuk memajukan pariwisata Rokan Hulu**
+
+*Last updated: 2025*
 
 

@@ -783,17 +783,17 @@
     const qrData = {
       'mamic': {
         file: 'assets/mamic-qr.png',
-        title: 'QR Code - MAMIC',
+        title: 'Masjid Agung Madani – National Islamic Centre (MAMIC)',
         name: 'MAMIC Virtual Tour'
       },
       'hapanasan': {
         file: 'assets/hapanasan-qr.png',
-        title: 'QR Code - Hapanasan',
+        title: 'Air Panas Hapanasan',
         name: 'Hapanasan Virtual Tour'
       },
       'rambah': {
         file: 'assets/rambah-qr.png',
-        title: 'QR Code - Rambah',
+        title: 'Makam Raja Rambah (Kompleks Makam Raja-Raja Rambah)',
         name: 'Rambah Virtual Tour'
       }
     };

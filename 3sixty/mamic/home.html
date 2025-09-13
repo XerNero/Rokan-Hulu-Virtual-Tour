@@ -18,10 +18,16 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Leaflet Fullscreen Plugin -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen@2.4.0/Control.FullScreen.css" />
+    
     <style>
         :root {
-            --accent: #22c55e;
-            --accent-hover: #16a34a;
+            --accent: #4ade80;
+            --accent-hover: #22c55e;
             --bg-global: linear-gradient(180deg, #ffffff 0%, #fefffe 2%, #fdfefd 6%, #fcfdfc 12%, #fbfdfb 18%, #fafcfa 24%, #f9fcf9 30%, #f8fcf9 36%, #f7fbf8 42%, #f6fbf7 48%, #f5faf6 54%, #f4faf5 60%, #f3f9f4 66%, #f2f9f3 72%, #f3f9f4 78%, #f4faf5 84%, #f5faf6 90%, #f6fbf7 96%, #ffffff 100%);
             --text-main: #1f2937;
             --text-muted: #4b5563;
@@ -108,22 +114,24 @@
 
         .btn-back {
             background: var(--accent);
-            color: white;
+            color: black;
         }
 
         .btn-back:hover {
             background: var(--accent-hover);
+            color: black;
             transform: translateY(-2px);
             box-shadow: none;
         }
 
         .btn-map {
             background: var(--accent);
-            color: white;
+            color: black;
         }
 
         .btn-map:hover {
             background: var(--accent-hover);
+            color: black;
             transform: translateY(-2px);
             box-shadow: none;
         }
@@ -181,7 +189,7 @@
 
         .tour-btn.primary {
             background: var(--accent);
-            color: white;
+            color: black;
         }
 
         .tour-btn.secondary {
@@ -548,7 +556,7 @@
 
         <!-- Footer -->
         <footer class="footer">
-            <p>&copy; 2025 MAMIC Virtual Tour 360°. Dibuat dengan ❤️ untuk kemajuan pariwisata Rokan Hulu.</p>
+            <p>&copy; 2025 Masjid Agung Madani – National Islamic Centre (MAMIC) Virtual Tour 360°. Dibuat dengan ❤️ untuk kemajuan pariwisata Rokan Hulu.</p>
             <p>Semua informasi bersumber dari data resmi MAMIC dan publikasi terkait.</p>
         </footer>
     </div>
@@ -566,13 +574,16 @@
                     <p><strong>Koordinat:</strong> -0.1234, 100.5678</p>
                     <p><strong>Jarak:</strong> ±4 km dari pusat kota Pasir Pengaraian</p>
                 </div>
-                <div class="map-placeholder">
-                    <p>Peta Google Maps akan ditampilkan di sini</p>
-                    <p>Anda dapat menambahkan embed Google Maps di sini</p>
-                </div>
+                <div id="interactive-map" style="height: 300px; border-radius: 15px; overflow: hidden;"></div>
             </div>
         </div>
     </div>
+
+    <!-- Leaflet Maps -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Leaflet Fullscreen Plugin -->
+    <script src="https://unpkg.com/leaflet.fullscreen@2.4.0/Control.FullScreen.js"></script>
 
     <script>
         // Initialize AOS
@@ -586,14 +597,113 @@
         }
 
         // Map functionality
+        let leafletMap = null;
+
         function showMap() {
-            document.getElementById('mapModal').style.display = 'block';
+            const modal = document.getElementById('mapModal');
+            modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
+            
+            // Initialize map after modal is shown
+            setTimeout(() => {
+                if (!leafletMap) {
+                    initLeafletMap();
+                }
+            }, 100);
         }
 
         function hideMap() {
             document.getElementById('mapModal').style.display = 'none';
             document.body.style.overflow = 'auto';
+        }
+
+        function initLeafletMap() {
+            // Check if Leaflet is loaded
+            if (typeof L === 'undefined') {
+                console.error('Leaflet not loaded');
+                return;
+            }
+
+            const mapContainer = document.getElementById('interactive-map');
+            if (!mapContainer || leafletMap) return;
+
+            // MAMIC coordinates
+            const coords = [0.8956111111111111, 100.30888888888889];
+            const locationData = {
+                title: 'Masjid Agung Madani Islamic Centre (MAMIC)',
+                address: 'Jl. Tuanku Tambusai Km 4, Pasir Pengaraian, Rokan Hulu, Riau',
+                distance: '± 4 km dari pusat kota Pasir Pengaraian'
+            };
+
+            // Create map
+            leafletMap = L.map('interactive-map', {
+                zoomControl: true,
+                scrollWheelZoom: true,
+                doubleClickZoom: true,
+                boxZoom: true,
+                keyboard: true,
+                dragging: true,
+                touchZoom: true
+            }).setView(coords, 16);
+
+            // Add tile layers
+            const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(leafletMap);
+
+            const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '© Esri',
+                maxZoom: 19
+            });
+
+            const terrainLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenTopoMap',
+                maxZoom: 17
+            });
+
+            // Layer control
+            const baseMaps = {
+                "Peta Jalan": osmLayer,
+                "Satelit": satelliteLayer,
+                "Topografi": terrainLayer
+            };
+            L.control.layers(baseMaps).addTo(leafletMap);
+
+            // Add custom marker
+            const customIcon = L.divIcon({
+                html: '<div style="background: var(--accent); border-radius: 50%; width: 20px; height: 20px; border: 3px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3);"></div>',
+                className: 'custom-marker',
+                iconSize: [20, 20],
+                iconAnchor: [10, 10]
+            });
+
+            const marker = L.marker(coords, { icon: customIcon }).addTo(leafletMap);
+            
+            // Popup content
+            const popupContent = `
+                <div style="font-family: 'Poppins', sans-serif; min-width: 200px;">
+                    <h3 style="margin: 0 0 10px 0; color: var(--accent); font-size: 1.1rem;">${locationData.title}</h3>
+                    <p style="margin: 5px 0; font-size: 0.9rem;"><strong>📍 Alamat:</strong><br>${locationData.address}</p>
+                    <p style="margin: 5px 0; font-size: 0.9rem;"><strong>📏 Jarak:</strong> ${locationData.distance}</p>
+                    <div style="margin-top: 10px; text-align: center;">
+                        <a href="https://www.google.com/maps?q=${coords[0]},${coords[1]}" target="_blank" 
+                           style="background: var(--accent); color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px; font-size: 0.8rem;">
+                            Buka di Google Maps
+                        </a>
+                    </div>
+                </div>
+            `;
+            
+            marker.bindPopup(popupContent).openPopup();
+
+            // Add scale bar
+            L.control.scale({ metric: true, imperial: false }).addTo(leafletMap);
+
+            // Add fullscreen control if available
+            if (L.control.fullscreen) {
+                leafletMap.addControl(new L.control.fullscreen());
+            }
         }
 
         // Close modal when clicking outside
